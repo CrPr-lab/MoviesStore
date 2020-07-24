@@ -16,6 +16,7 @@ namespace MoviesStore.Models
         public int ReliseYear { get; set; }
         public string Director { get; set; }
         public byte[] Poster { get; set; }
+        public string UserId { get; set; }
         public IdentityUser User { get; set; }
     }
 }

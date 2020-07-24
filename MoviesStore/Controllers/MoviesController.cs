@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -26,8 +27,14 @@ namespace MoviesStore.Controllers
 
         // GET: Movies
         public async Task<IActionResult> Index()
-        {           
-            return View(await _context.Movies.Where(movie => movie.User.Id == _userManager.GetUserId(User)).ToListAsync());
+        {
+            Debug.WriteLine(_context.Movies.First().Name);
+            Debug.WriteLine(_context.Movies.First().UserId);
+            //Debug.WriteLine(_context.Movies.Include(movie => movie.User).First().User.Id);
+            _context.Movies.Where(movie => movie.User.Id == _userManager.GetUserId(User)).Load();
+
+            return View(await _context.Movies.ToListAsync());
+            //return View(await _context.Movies.ToListAsync());
         }
 
         // GET: Movies/Details/5
