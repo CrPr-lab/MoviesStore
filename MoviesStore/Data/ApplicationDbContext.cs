@@ -24,6 +24,7 @@ namespace MoviesStore.Data
             modelBuilder.Entity<Movie>().HasIndex(movie => movie.Name);
             modelBuilder.Entity<Movie>().Property(movie => movie.Name).IsRequired();
             modelBuilder.Entity<Movie>().Property(movie => movie.UserId).IsRequired();
+            modelBuilder.Entity<Movie>().Ignore(movie => movie.PosterImg);
         }
     }
 }

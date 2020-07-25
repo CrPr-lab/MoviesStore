@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -28,13 +29,10 @@ namespace MoviesStore.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            Debug.WriteLine(_context.Movies.First().Name);
-            Debug.WriteLine(_context.Movies.First().UserId);
-            //Debug.WriteLine(_context.Movies.Include(movie => movie.User).First().User.Id);
-            _context.Movies.Where(movie => movie.User.Id == _userManager.GetUserId(User)).Load();
-
-            return View(await _context.Movies.ToListAsync());
-            //return View(await _context.Movies.ToListAsync());
+            return View(await _context
+                .Movies
+                .Where(movie => movie.UserId == _userManager.GetUserId(User))
+                .ToListAsync());
         }
 
         // GET: Movies/Details/5
@@ -45,14 +43,23 @@ namespace MoviesStore.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movies
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
             }
 
             return View(movie);
+        }
+
+        public async Task<IActionResult> GetImage(int movieId)
+        {
+            var movie = await _context.FindAsync<Movie>(movieId);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return File(movie.Poster, "image/jpeg");
         }
 
         // GET: Movies/Create
@@ -66,10 +73,11 @@ namespace MoviesStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ReliseYear,Director,Poster")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Name,Description,ReliseYear,Director,PosterImg")] Movie movie)
         {
             if (ModelState.IsValid)
             {
+                movie.UserId = _userManager.GetUserId(User);
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,7 +106,7 @@ namespace MoviesStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,Poster")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg")] Movie movie)
         {
             if (id != movie.Id)
             {
