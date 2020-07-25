@@ -52,13 +52,19 @@ namespace MoviesStore.Controllers
             return View(movie);
         }
 
-        public async Task<IActionResult> GetImage(int movieId)
+        public async Task<IActionResult> GetImage(int? id)
         {
-            var movie = await _context.FindAsync<Movie>(movieId);
-            if (movie == null)
+            if (id == null)
             {
                 return NotFound();
             }
+
+            var movie = await _context.FindAsync<Movie>(id);
+            if (movie?.Poster == null)
+            {
+                return NotFound();
+            }
+
             return File(movie.Poster, "image/jpeg");
         }
 
@@ -69,8 +75,6 @@ namespace MoviesStore.Controllers
         }
 
         // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,ReliseYear,Director,PosterImg")] Movie movie)
@@ -98,20 +102,19 @@ namespace MoviesStore.Controllers
             {
                 return NotFound();
             }
+
             return View(movie);
         }
 
         // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg,UserId")] Movie movie)
         {
-            if (id != movie.Id)
-            {
-                return NotFound();
-            }
+            //if (id != movie.Id)
+            //{
+            //    return NotFound();
+            //}
 
             if (ModelState.IsValid)
             {
