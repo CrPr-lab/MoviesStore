@@ -14,18 +14,28 @@ namespace MoviesStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private const int pageSize = 3;   // количество элементов на странице
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Movies.ToListAsync());
+        public async Task<IActionResult> Index(int page = 1)
+        {           
+            var count = await _context.Movies.CountAsync();           
+            var items = await _context.Movies.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                Movies = items
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
