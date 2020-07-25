@@ -14,7 +14,7 @@ namespace MoviesStore.Controllers
 {
     public class HomeController : Controller
     {
-        private const int pageSize = 3;   // количество элементов на странице
+        private const int pageSize = 5;   // количество элементов на странице
 
         private readonly ApplicationDbContext _context;
 

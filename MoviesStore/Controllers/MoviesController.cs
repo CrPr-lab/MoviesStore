@@ -52,6 +52,7 @@ namespace MoviesStore.Controllers
             return View(movie);
         }
 
+        // GET: Movies/GetImage/5
         public async Task<IActionResult> GetImage(int? id)
         {
             if (id == null)
@@ -109,12 +110,12 @@ namespace MoviesStore.Controllers
         // POST: Movies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg,UserId")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg,Poster,UserId")] Movie movie)
         {
-            //if (id != movie.Id)
-            //{
-            //    return NotFound();
-            //}
+            if (id != movie.Id || _userManager.GetUserId(User) != movie.UserId)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
