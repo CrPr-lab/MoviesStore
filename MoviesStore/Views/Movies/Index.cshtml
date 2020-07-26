@@ -1,37 +1,36 @@
-﻿@model IEnumerable<MoviesStore.Models.Movie>
+﻿@model MoviesStore.Models.MoviesViewModel
 
 @{
-    ViewData["Title"] = "Мои фильмы";
+    ViewData["Title"] = "Главная страница";
 }
 
-<h1>Мои фильмы</h1>
+<h1>Каталог фильмов</h1>
 
-<p>
-    <a asp-action="Create">Добавить фильм</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReliseYear)
+                @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().ReliseYear)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Director)
+                @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().Director)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PosterImg)
+                @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().PosterImg)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-       @foreach (var item in Model) {
+        @foreach (var item in Model.Movies)
+        {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -48,12 +47,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.PosterImg)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Подробнее</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                <td>                    
+                    <a asp-action="Details" asp-route-id="@item.Id">Подробнее</a>                        
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<pagination page-model="Model.PageViewModel" page-action="Index"></pagination>     

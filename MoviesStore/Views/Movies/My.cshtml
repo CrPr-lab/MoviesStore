@@ -1,12 +1,14 @@
-﻿@model MoviesStore.Models.IndexViewModel
+﻿@model MoviesStore.Models.MoviesViewModel
 
 @{
-    ViewData["Title"] = "Главная страница";
+    ViewData["Title"] = "Мои фильмы";
 }
 
-<h1>Каталог фильмов</h1>
+<h1>Мои фильмы</h1>
 
-
+<p>
+    <a asp-action="Create">Добавить фильм</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -48,12 +50,11 @@
                     @Html.DisplayFor(modelItem => item.PosterImg)
                 </td>
                 <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> @*|
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Подробнее</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<pagination page-model="Model.PageViewModel" page-action="Index"></pagination>     

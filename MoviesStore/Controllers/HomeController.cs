@@ -23,22 +23,12 @@ namespace MoviesStore.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
-        {           
-            var count = await _context.Movies.CountAsync();           
-            var items = await _context.Movies.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-            IndexViewModel viewModel = new IndexViewModel
-            {
-                PageViewModel = pageViewModel,
-                Movies = items
-            };
-
-            return View(viewModel);
+        public IActionResult Privacy()
+        {
+            return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult NotFoundAddress()
         {
             return View();
         }

@@ -14,9 +14,10 @@ using MoviesStore.Models;
 
 namespace MoviesStore.Controllers
 {
-    [Authorize]
+    
     public class MoviesController : Controller
     {
+        private const int pageSize = 5;   // количество элементов на странице
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -26,13 +27,22 @@ namespace MoviesStore.Controllers
             _userManager = userManager;
         }
 
-        // GET: Movies
-        public async Task<IActionResult> Index()
+        // GET: Movies/Index
+        public IActionResult Index(int page = 1)
         {
-            return View(await _context
-                .Movies
-                .Where(movie => movie.UserId == _userManager.GetUserId(User))
-                .ToListAsync());
+            return View(new MoviesViewModel(_context.Movies, page, pageSize));
+        }
+
+        // GET: Movies/My
+        [Authorize]
+        public IActionResult My(int page = 1)
+        {           
+            return View(
+                new MoviesViewModel(
+                    _context.Movies.Where(movie => movie.UserId == _userManager.GetUserId(User)),
+                    page,
+                    pageSize)
+                );
         }
 
         // GET: Movies/Details/5
@@ -53,6 +63,7 @@ namespace MoviesStore.Controllers
         }
 
         // GET: Movies/GetImage/5
+        [Authorize]
         public async Task<IActionResult> GetImage(int? id)
         {
             if (id == null)
@@ -70,12 +81,14 @@ namespace MoviesStore.Controllers
         }
 
         // GET: Movies/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Movies/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,ReliseYear,Director,PosterImg")] Movie movie)
@@ -91,6 +104,7 @@ namespace MoviesStore.Controllers
         }
 
         // GET: Movies/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -108,6 +122,7 @@ namespace MoviesStore.Controllers
         }
 
         // POST: Movies/Edit/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg,Poster,UserId")] Movie movie)
@@ -141,6 +156,7 @@ namespace MoviesStore.Controllers
         }
 
         // GET: Movies/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -159,6 +175,7 @@ namespace MoviesStore.Controllers
         }
 
         // POST: Movies/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,7 +183,7 @@ namespace MoviesStore.Controllers
             var movie = await _context.Movies.FindAsync(id);
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(My));
         }
 
         private bool MovieExists(int id)

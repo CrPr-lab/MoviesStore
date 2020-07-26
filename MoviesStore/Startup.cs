@@ -52,6 +52,7 @@ namespace MoviesStore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseStatusCodePagesWithReExecute("/Home/NotFoundAddress", "?code={0}");
             app.UseRouting();
 
             app.UseAuthentication();
@@ -61,7 +62,7 @@ namespace MoviesStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Movies}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
