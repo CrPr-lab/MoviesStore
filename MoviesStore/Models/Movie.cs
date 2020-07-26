@@ -13,7 +13,6 @@ namespace MoviesStore.Models
     public class Movie
     {
         private IFormFile posterImg;
-        private byte[] poster;
 
         public int Id { get; set; }
 
@@ -34,15 +33,7 @@ namespace MoviesStore.Models
         [Display(Name = "Режиссёр")]
         public string Director { get; set; }
 
-        public byte[] Poster
-        {
-            get => poster; 
-            set
-            {
-                poster = value;
-                
-            }
-        }
+        public byte[] Poster { get; set; }
 
         [Display(Name = "Постер")]
         public IFormFile PosterImg

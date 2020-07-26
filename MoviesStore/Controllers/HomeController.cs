@@ -14,15 +14,6 @@ namespace MoviesStore.Controllers
 {
     public class HomeController : Controller
     {
-        private const int pageSize = 5;   // количество элементов на странице
-
-        private readonly ApplicationDbContext _context;
-
-        public HomeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         public IActionResult Privacy()
         {
             return View();

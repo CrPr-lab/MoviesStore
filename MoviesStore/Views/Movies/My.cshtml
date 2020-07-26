@@ -24,9 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().Director)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Movies.FirstOrDefault().PosterImg)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -46,9 +46,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Director)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PosterImg)
-                </td>
+                @*<td>
+                    <img class="img-fluid" src="@Url.Action("GetImage", "Movies", new {id = item.Id})" />
+                </td>*@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Подробнее</a> |
@@ -58,3 +58,4 @@
         }
     </tbody>
 </table>
+<pagination page-model="Model.PageViewModel" page-action="Index"></pagination>

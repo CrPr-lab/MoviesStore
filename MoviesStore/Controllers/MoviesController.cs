@@ -17,7 +17,7 @@ namespace MoviesStore.Controllers
     
     public class MoviesController : Controller
     {
-        private const int pageSize = 5;   // количество элементов на странице
+        private const int pageSize = 3;   // количество элементов на странице
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -98,7 +98,7 @@ namespace MoviesStore.Controllers
                 movie.UserId = _userManager.GetUserId(User);
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(My));
             }
             return View(movie);
         }
@@ -127,9 +127,14 @@ namespace MoviesStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReliseYear,Director,PosterImg,Poster,UserId")] Movie movie)
         {
-            if (id != movie.Id || _userManager.GetUserId(User) != movie.UserId)
+            if (id != movie.Id)
             {
                 return NotFound();
+            }
+
+            if (_userManager.GetUserId(User) != movie.UserId)
+            {
+                return Forbid();
             }
 
             if (ModelState.IsValid)
@@ -150,7 +155,7 @@ namespace MoviesStore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(My));
             }
             return View(movie);
         }
@@ -181,6 +186,10 @@ namespace MoviesStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
+            if (_userManager.GetUserId(User) != movie.UserId)
+            {
+                return Forbid();
+            }
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(My));
