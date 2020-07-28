@@ -63,7 +63,6 @@ namespace MoviesStore.Controllers
         }
 
         // GET: Movies/GetImage/5
-        [Authorize]
         public async Task<IActionResult> GetImage(int? id)
         {
             if (id == null)
@@ -84,7 +83,7 @@ namespace MoviesStore.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            return View();
+            return View(new Movie() { ReliseYear = DateTime.Now.Year } /*Задаём значение по-умолчанию для поля*/);
         }
 
         // POST: Movies/Create
