@@ -26,7 +26,8 @@ namespace MoviesStore.Models
         public string Description { get; set; }
 
         [Display(Name = "Год выхода")]
-        [YearValidation(ErrorMessage = "Введите год в диапазоне от 1895 до текущего")]
+        [Required(ErrorMessage = "Введите год выхода")]
+        [YearValidation]
         //[Range(1895, 2020, ErrorMessage = "Введите год в диапазоне от 1985 до 2020")]
         public int ReliseYear { get; set; }
 
